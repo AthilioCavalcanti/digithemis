@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "digithemis"
+version = "0.1.0"
+description = ""
+authors = ["Athílio Cavalcanti <athiliocavalcanti@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+opencv-python = "^4.9.0.80"
+pytesseract = "^0.3.10"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.3.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
