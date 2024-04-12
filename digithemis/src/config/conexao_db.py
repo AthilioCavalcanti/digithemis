@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
 
 env = load_dotenv()
@@ -12,6 +13,7 @@ class ConexaoDB:
             f'@{env["DB_HOST"]}:{env["DB_PORT"]}/{env["DB_NAME"]}'
         )
         self.__engine = self.__criar_engine()
+        self.session = None
 
     def __criar_engine(self):
         try:
@@ -23,3 +25,11 @@ class ConexaoDB:
     @property
     def engine(self):
         return self.__engine
+
+    def __enter__(self):
+        session_maker = sessionmaker(bind=self.__engine)
+        self.session = session_maker()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.session.close()
