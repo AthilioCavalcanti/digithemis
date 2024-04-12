@@ -9,6 +9,8 @@ readme = "README.md"
 python = "^3.12"
 opencv-python = "^4.9.0.80"
 pytesseract = "^0.3.10"
+psycopg2-binary = "^2.9.9"
+sqlalchemy = "^2.0.29"
 
 
 [tool.poetry.group.dev.dependencies]
