@@ -11,6 +11,9 @@ opencv-python = "^4.9.0.80"
 pytesseract = "^0.3.10"
 
 
+[tool.poetry.group.dev.dependencies]
+blue = "^0.9.1"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
