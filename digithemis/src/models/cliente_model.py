@@ -2,6 +2,7 @@ from sqlalchemy import String, Index
 from sqlalchemy.orm import Mapped, mapped_column
 from .base import Base
 
+
 class Cliente(Base):
     __tablename__ = 'clientes'
 

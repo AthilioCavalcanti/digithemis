@@ -2,6 +2,8 @@ from sqlalchemy import String, Index, LargeBinary, ForeignKey, Date
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .base import Base
 from datetime import datetime
+
+
 class Documento(Base):
     __tablename__ = 'documentos'
 
@@ -10,7 +12,9 @@ class Documento(Base):
     titulo: Mapped[str] = mapped_column(String(100), nullable=True)
     categoria: Mapped[str] = mapped_column(String(20))
     arquivo: Mapped[LargeBinary] = mapped_column(type_=LargeBinary)
-    data_insercao: Mapped[Date] = mapped_column(Date, default=datetime.now().date())
+    data_insercao: Mapped[Date] = mapped_column(
+        Date, default=datetime.now().date()
+    )
 
     cliente = relationship('Cliente')
 
