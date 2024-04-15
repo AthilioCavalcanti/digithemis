@@ -17,4 +17,4 @@ class Cliente(Base):
     indice_cpf_cnpj = Index('idx_cpf_cnpj', cpf_cnpj)
 
     def __repr__(self):
-        return f'Cliente: {self.nome}; CPF: {self.cpf}; E-mail: {self.email}; Celular: {self.celular}'
+        return f'Cliente: {self.nome}; CPF: {self.cpf_cnpj}; E-mail: {self.email}; Celular: {self.telefone}'
