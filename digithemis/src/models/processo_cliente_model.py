@@ -2,7 +2,7 @@ from sqlalchemy import Index, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .base import Base
 
-class Processo_Cliente(Base):
+class ProcessoCliente(Base):
     __tablename__ = 'processos_clientes'
 
     id_processo: Mapped[int] = mapped_column(ForeignKey('processos.id_processo'), primary_key=True)
