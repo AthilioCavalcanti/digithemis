@@ -20,7 +20,7 @@ def segmentar(imagem):
 def contornos_internos(imagem):
     contours, _ = cv2.findContours(imagem, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
     contours = sorted(contours, key=cv2.contourArea, reverse=True)
-    outline_contours = img.copy()
+    outline_contours = imagem.copy()
     imagem_contorno = cv2.drawContours(outline_contours, contours, contourIdx=-1, color=(0, 255, 0))
     return imagem_contorno
 
