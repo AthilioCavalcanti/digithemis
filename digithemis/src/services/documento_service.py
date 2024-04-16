@@ -8,16 +8,20 @@ class DocumentoService:
         self.conexao = ConexaoDB()
 
     def insere_documento(self, id_cliente, titulo, categoria, arquivo):
-        with self.conexao as con:            
+        with self.conexao as con:
             try:
-                cliente = con.session.query(Cliente).filter_by(id_cliente=id_cliente).first()
+                cliente = (
+                    con.session.query(Cliente)
+                    .filter_by(id_cliente=id_cliente)
+                    .first()
+                )
                 if cliente:
                     documento = Documento(
                         id_cliente=id_cliente,
                         titulo=titulo,
                         categoria=categoria,
-                        arquivo=arquivo
-                    )            
+                        arquivo=arquivo,
+                    )
                     con.session.add(documento)
                     con.session.commit()
                 else:
@@ -31,25 +35,37 @@ class DocumentoService:
             chave, valor = next(iter(kwargs.items()))
 
             if chave == 'id_cliente' or chave == 'categoria':
-                documentos = con.session.query(
-                    Documento).filter(Documento.id_cliente == valor if chave == 'id_cliente' else Documento.categoria == valor
-                                    ).all()
+                documentos = (
+                    con.session.query(Documento)
+                    .filter(
+                        Documento.id_cliente == valor
+                        if chave == 'id_cliente'
+                        else Documento.categoria == valor
+                    )
+                    .all()
+                )
                 if documentos:
                     return documentos
                 else:
-                    raise Exception('Não foram encontrados documentos para o cliente pesquisado')
-                
+                    raise Exception(
+                        'Não foram encontrados documentos para o cliente pesquisado'
+                    )
+
             atributo = Documento.titulo
 
             if chave == 'id_documento':
-                atributo = Documento.id_documento        
+                atributo = Documento.id_documento
 
-            documento = con.session.query(Documento).filter(atributo == valor).all()
-                    
+            documento = (
+                con.session.query(Documento).filter(atributo == valor).all()
+            )
+
             if documento:
                 return documento
             else:
-                raise Exception('Não foi encontrato nenhum documento com o valor informado')
+                raise Exception(
+                    'Não foi encontrato nenhum documento com o valor informado'
+                )
 
     def lista_documentos(self):
         with self.conexao as con:
@@ -62,8 +78,10 @@ class DocumentoService:
                 documento = self.busca_documentos(id_documento=id_documento)
                 campos = ['id_cliente', 'titulo']
                 if documento[0]:
-                    if campo in campos:                    
-                        con.session.query(Documento).filter(Documento.id_documento == id_documento).update({campo: valor})
+                    if campo in campos:
+                        con.session.query(Documento).filter(
+                            Documento.id_documento == id_documento
+                        ).update({campo: valor})
                     else:
                         raise ValueError('Campo inválido')
                     con.session.commit()
@@ -80,7 +98,9 @@ class DocumentoService:
             try:
                 documento = self.busca_documentos(id_documento=id_documento)
                 if documento:
-                    con.session.query(Documento).filter(Documento.id_documento == id_documento).delete()
+                    con.session.query(Documento).filter(
+                        Documento.id_documento == id_documento
+                    ).delete()
                     con.session.commit()
                 else:
                     raise RegistroNaoExistenteError(

@@ -13,9 +13,7 @@ class AdvogadoService:
             try:
                 advogado_exite = self.busca_advogado(cpf) is not None
                 if advogado_exite:
-                    raise RegistroExistenteError(
-                        'Advogado já está cadastrado'
-                    )
+                    raise RegistroExistenteError('Advogado já está cadastrado')
                 else:
                     advogado = Advogado(
                         nome=nome,
@@ -48,8 +46,10 @@ class AdvogadoService:
                 campos = ['nome', 'oab', 'email', 'celular']
                 if advogado:
                     if campo in campos:
-                    # senha - talvez separar essa parte
-                        con.session.query(Advogado).filter(Advogado.cpf == cpf).update({campo: valor})
+                        # senha - talvez separar essa parte
+                        con.session.query(Advogado).filter(
+                            Advogado.cpf == cpf
+                        ).update({campo: valor})
                     else:
                         raise ValueError('Campo inválido')
                     con.session.commit()
@@ -79,7 +79,9 @@ class AdvogadoService:
     def valida_senha(self, cpf, senha):
         with self.conexao as con:
             try:
-                advogado = con.session.query(Advogado).filter_by(cpf=cpf).first()
+                advogado = (
+                    con.session.query(Advogado).filter_by(cpf=cpf).first()
+                )
                 if advogado:
                     if Seguranca.verifica_senha(senha, advogado.senha):
                         return True
