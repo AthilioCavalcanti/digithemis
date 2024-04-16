@@ -30,7 +30,6 @@ def contornos_borda(imagem):
     contornos_borda = cv2.drawContours(all_contours, contours, -1, (0, 255, 0), 3)
     return contornos_borda
 
-
 def corretor_rotacao(imagem):
     coords = np.column_stack(np.where(imagem > 0))
     angle = cv2.minAreaRect(coords)[-1]
