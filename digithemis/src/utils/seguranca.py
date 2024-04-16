@@ -10,4 +10,6 @@ class Seguranca:
 
     @staticmethod
     def verifica_senha(senha, hashed_senha):
+        if hashed_senha.startswith('\\x'):
+            hashed_senha = bytes.fromhex(hashed_senha[2:])
         return bcrypt.checkpw(senha.encode('utf-8'), hashed_senha)
