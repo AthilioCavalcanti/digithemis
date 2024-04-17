@@ -117,3 +117,27 @@ class ValidacaoEntradas:
                 raise Exception('Formato inválido')
 
         raise Exception('Formato inválido')
+    
+    @staticmethod
+    def formata_numero_processo(num_processo):
+        match = re.match(
+            r'^(\d{7})(\d{2})(\d{4})(\d)(\d{2})(\d{4})$', num_processo
+        )
+        if match:
+            numero_formatado = '-'.join(
+                [
+                    match.group(1),
+                    match.group(2)
+                    + '.'
+                    + match.group(3)
+                    + '.'
+                    + match.group(4)
+                    + '.'
+                    + match.group(5)
+                    + '.'
+                    + match.group(6),
+                ]
+            )
+            return numero_formatado
+        else:
+            raise Exception('Formato inválido')
