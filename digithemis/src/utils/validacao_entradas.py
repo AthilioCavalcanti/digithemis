@@ -141,3 +141,10 @@ class ValidacaoEntradas:
             return numero_formatado
         else:
             raise Exception('Formato inválido')
+        
+    @staticmethod
+    def valida_num_processo(num_processo):
+        regex_num_processo = r'^\d{7}-\d{2}\.\d{4}\.8\.19\.\d{4}$'
+        if re.match(regex_num_processo, num_processo):
+            return True
+        raise Exception('Formato Inválido')
