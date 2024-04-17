@@ -10,7 +10,7 @@ class ValidacaoEntradas:
             return True
 
         return False
-    
+
     @staticmethod
     def valida_senha(senha):
         if len(senha) < 6:
@@ -35,7 +35,7 @@ class ValidacaoEntradas:
             )
 
         return True
-    
+
     @staticmethod
     def valida_cpf_cnpj(cpf_cnpj):
         documento = ''.join(filter(str.isdigit, cpf_cnpj))
@@ -117,7 +117,7 @@ class ValidacaoEntradas:
                 raise Exception('Formato inválido')
 
         raise Exception('Formato inválido')
-    
+
     @staticmethod
     def formata_numero_processo(num_processo):
         match = re.match(
@@ -141,25 +141,49 @@ class ValidacaoEntradas:
             return numero_formatado
         else:
             raise Exception('Formato inválido')
-        
+
     @staticmethod
     def valida_num_processo(num_processo):
         regex_num_processo = r'^\d{7}-\d{2}\.\d{4}\.8\.19\.\d{4}$'
         if re.match(regex_num_processo, num_processo):
             return True
         raise Exception('Formato Inválido')
-    
+
     @staticmethod
-    def valida_oab(oab):        
+    def valida_oab(oab):
         regex = r'^[A-Z]{2}\d{3}\.\d{3}$'
-        
+
         estados = [
-            "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", 
-            "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", 
-            "RS", "RO", "RR", "SC", "SP", "SE", "TO"
-        ]        
+            'AC',
+            'AL',
+            'AP',
+            'AM',
+            'BA',
+            'CE',
+            'DF',
+            'ES',
+            'GO',
+            'MA',
+            'MT',
+            'MS',
+            'MG',
+            'PA',
+            'PB',
+            'PR',
+            'PE',
+            'PI',
+            'RJ',
+            'RN',
+            'RS',
+            'RO',
+            'RR',
+            'SC',
+            'SP',
+            'SE',
+            'TO',
+        ]
         if re.match(regex, oab):
-            
+
             if oab[:2] in estados:
                 return True
             else:
