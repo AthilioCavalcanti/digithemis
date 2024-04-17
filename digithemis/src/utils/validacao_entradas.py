@@ -148,3 +148,21 @@ class ValidacaoEntradas:
         if re.match(regex_num_processo, num_processo):
             return True
         raise Exception('Formato Inválido')
+    
+    @staticmethod
+    def valida_oab(oab):        
+        regex = r'^[A-Z]{2}\d{3}\.\d{3}$'
+        
+        estados = [
+            "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", 
+            "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", 
+            "RS", "RO", "RR", "SC", "SP", "SE", "TO"
+        ]        
+        if re.match(regex, oab):
+            
+            if oab[:2] in estados:
+                return True
+            else:
+                return False
+        else:
+            return False
