@@ -35,3 +35,85 @@ class ValidacaoEntradas:
             )
 
         return True
+    
+    @staticmethod
+    def valida_cpf_cnpj(cpf_cnpj):
+        documento = ''.join(filter(str.isdigit, cpf_cnpj))
+
+        if len(documento) == 11:
+            if documento == documento[0] * 11:
+                raise Exception('Formato inválido')
+
+            soma, multiplicador = 0, 10
+            nove_primeiros_digitos = documento[:-2]
+
+            for digito in nove_primeiros_digitos:
+                soma += int(digito) * multiplicador
+                multiplicador -= 1
+
+            if soma % 11 < 2:
+                dv1 = '0'
+            else:
+                dv1 = str(11 - soma % 11)
+
+            dez_primeiros_digitos = nove_primeiros_digitos + dv1
+
+            soma, multiplicador = 0, 11
+
+            for digito in dez_primeiros_digitos:
+                soma += int(digito) * multiplicador
+                multiplicador -= 1
+
+            if soma % 11 < 2:
+                dv2 = '0'
+            else:
+                dv2 = str(11 - soma % 11)
+
+            cpf = dez_primeiros_digitos + dv2
+
+            if cpf == documento:
+                return True
+            else:
+                raise Exception('Formato Inválido')
+
+        if len(documento) == 14:
+            if documento == documento[0] * 14:
+                raise Exception('Formato inválido')
+
+            soma, multiplicador = 0, 5
+            doze_primeiros_digitos = documento[:-2]
+
+            for digito in doze_primeiros_digitos:
+                if multiplicador == 1:
+                    multiplicador = 9
+                soma += int(digito) * multiplicador
+                multiplicador -= 1
+
+            if soma % 11 < 2:
+                dv1 = '0'
+            else:
+                dv1 = str(11 - soma % 11)
+
+            treze_primeiros_digitos = doze_primeiros_digitos + dv1
+
+            soma, multiplicador = 0, 6
+
+            for digito in treze_primeiros_digitos:
+                if multiplicador == 1:
+                    multiplicador = 9
+                soma += int(digito) * multiplicador
+                multiplicador -= 1
+
+            if soma % 11 < 2:
+                dv2 = '0'
+            else:
+                dv2 = str(11 - soma % 11)
+
+            cnpj = treze_primeiros_digitos + dv2
+
+            if cnpj == documento:
+                return True
+            else:
+                raise Exception('Formato inválido')
+
+        raise Exception('Formato inválido')
