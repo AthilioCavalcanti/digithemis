@@ -43,10 +43,9 @@ class AdvogadoService:
         with self.conexao as con:
             try:
                 advogado = self.busca_advogado(cpf)
-                campos = ['nome', 'oab', 'email', 'celular']
+                campos = ['nome', 'oab', 'email', 'celular', 'senha']
                 if advogado:
                     if campo in campos:
-                        # senha - talvez separar essa parte
                         con.session.query(Advogado).filter(
                             Advogado.cpf == cpf
                         ).update({campo: valor})
@@ -85,7 +84,6 @@ class AdvogadoService:
                 if advogado:
                     if Seguranca.verifica_senha(senha, advogado.senha):
                         return True
-                # Lançar exceções para cada caso. Usuário não existe, senha errada, etc
                 return False
             except Exception as e:
                 raise e
