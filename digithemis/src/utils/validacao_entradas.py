@@ -184,3 +184,11 @@ class ValidacaoEntradas:
                 return False
         else:
             return False
+
+    @staticmethod
+    def valida_telefone(telefone):
+        regex_telefone = r'^\(?\d{2}\)?\s?9?\d{4}-?\d{4}$'
+        if re.match(regex_telefone, telefone):
+            return True
+        else:
+            raise Exception('Número de telefone inválido')
