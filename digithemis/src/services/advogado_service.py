@@ -84,7 +84,6 @@ class AdvogadoService:
                 if advogado:
                     if Seguranca.verifica_senha(senha, advogado.senha):
                         return True
-                # Lançar exceções para cada caso. Usuário não existe, senha errada, etc
                 return False
             except Exception as e:
                 raise e
