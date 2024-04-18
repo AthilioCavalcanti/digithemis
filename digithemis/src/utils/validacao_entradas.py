@@ -1,5 +1,5 @@
 import re
-from errors import validacao_error
+from errors import validacao_error, senha_error
 
 
 class ValidacaoEntradas:
@@ -14,25 +14,19 @@ class ValidacaoEntradas:
     @staticmethod
     def valida_senha(senha):
         if len(senha) < 6:
-            raise Exception('A senha deve ter no mínimo 6 caracteres')
+            raise senha_error.SenhaCurtaError()
 
         if not re.search(r'[A-Z]', senha):
-            raise Exception(
-                'A senha deve conter pelo menos uma letra maiúscula'
-            )
+            raise senha_error.SenhaSemMaiusculaError()
 
         if not re.search(r'[a-z]', senha):
-            raise Exception(
-                'A senha deve conter pelo menos uma letra minúscula'
-            )
+            raise senha_error.SenhaSemMinusculaError()
 
         if not re.search(r'\d', senha):
-            raise Exception('A senha deve conter pelo menos um dígito')
+            raise senha_error.SenhaSemNumeroError()
 
         if not re.search(r'[^\w\s]', senha):
-            raise Exception(
-                'A senha deve conter pelo menos um caractere especial'
-            )
+            raise senha_error.SenhaSemCaracterEspecialError()
 
         return True
 
