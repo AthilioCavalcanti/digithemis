@@ -1,4 +1,5 @@
 import re
+from errors import validacao_error
 
 
 class ValidacaoEntradas:
@@ -8,8 +9,7 @@ class ValidacaoEntradas:
         regex_email = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
         if re.match(regex_email, email):
             return True
-
-        return False
+        raise validacao_error.EmailInvalidoError()
 
     @staticmethod
     def valida_senha(senha):
@@ -42,7 +42,7 @@ class ValidacaoEntradas:
 
         if len(documento) == 11:
             if documento == documento[0] * 11:
-                raise Exception('Formato inválido')
+                raise validacao_error.CPFInvalidoError()
 
             soma, multiplicador = 0, 10
             nove_primeiros_digitos = documento[:-2]
@@ -74,11 +74,11 @@ class ValidacaoEntradas:
             if cpf == documento:
                 return True
             else:
-                raise Exception('Formato Inválido')
+                raise validacao_error.CPFInvalidoError()
 
         if len(documento) == 14:
             if documento == documento[0] * 14:
-                raise Exception('Formato inválido')
+                raise validacao_error.CNPJInvalidoError()
 
             soma, multiplicador = 0, 5
             doze_primeiros_digitos = documento[:-2]
@@ -114,7 +114,7 @@ class ValidacaoEntradas:
             if cnpj == documento:
                 return True
             else:
-                raise Exception('Formato inválido')
+                raise validacao_error.CNPJInvalidoError()
 
         raise Exception('Formato inválido')
 
@@ -140,14 +140,14 @@ class ValidacaoEntradas:
             )
             return numero_formatado
         else:
-            raise Exception('Formato inválido')
+            raise validacao_error.NumeroProcessoInvalidoError()
 
     @staticmethod
     def valida_num_processo(num_processo):
         regex_num_processo = r'^\d{7}-\d{2}\.\d{4}\.8\.19\.\d{4}$'
         if re.match(regex_num_processo, num_processo):
             return True
-        raise Exception('Formato Inválido')
+        raise validacao_error.NumeroProcessoInvalidoError()
 
     @staticmethod
     def valida_oab(oab):
