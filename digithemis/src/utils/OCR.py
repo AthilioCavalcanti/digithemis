@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
 import pytesseract
+import os
+from Imagem import Converte_cinza, filtro_bilateral, segmentar, contornos_internos, corretor_rotacao
 
 def ler_imagem(caminho):
     # Carrega a imagem
@@ -10,9 +12,13 @@ def ler_imagem(caminho):
 
 def converter_imagem_para_string(imagem):
     # Converte a imagem em escala de cinza
-    img_gray = cv2.cvtColor(imagem, cv2.COLOR_RGB2GRAY)
+    img_gray = Converte_cinza (imagem)
+    #Aplica Filtro Bilateral
+    img_filtro = filtro_bilateral (img_gray)
+    #segmentação por binarização e Otsu
+    img_seg = segmentar (img_filtro)
     # Realiza o OCR na imagem
-    texto_reconhecido = pytesseract.image_to_string(img_gray, lang='por')
+    texto_reconhecido = pytesseract.image_to_string(img_seg, lang='por')
     return texto_reconhecido
 
 def procurar_string(texto, string_procurada):
@@ -20,3 +26,14 @@ def procurar_string(texto, string_procurada):
         return True
     else:
         return False
+
+def buscar_palavra_em_arquivos(diretorio, palavra_procurada):
+    arquivos_com_palavra = []
+    for raiz, _, arquivos in os.walk(diretorio):
+        for arquivo in arquivos:
+            caminho_arquivo = os.path.join(raiz, arquivo)
+            imagem = ler_imagem(caminho_arquivo)
+            texto = converter_imagem_para_string(imagem)
+            if procurar_string(texto, palavra_procurada):
+                arquivos_com_palavra.append(caminho_arquivo)
+    return arquivos_com_palavra
