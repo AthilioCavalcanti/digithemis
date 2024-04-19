@@ -46,6 +46,9 @@ class AdvogadoService:
                 campos = ['nome', 'oab', 'email', 'celular', 'senha']
                 if advogado:
                     if campo in campos:
+                        if campo == 'senha':
+                            valor = Seguranca.criptografa_senha(valor)
+                            
                         con.session.query(Advogado).filter(
                             Advogado.cpf == cpf
                         ).update({campo: valor})
