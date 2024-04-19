@@ -1,6 +1,6 @@
 from pathlib import Path
 import tkinter as tk
-from tkinter import Canvas, Button, PhotoImage, filedialog
+from tkinter import Canvas, Button, PhotoImage, filedialog, Label
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / 'assets'
@@ -19,6 +19,7 @@ class InsertProcess(tk.Tk):
         self.configure(bg='#81A69F')
         self.create_canvas()
         self.create_buttons()
+        self.display_path = None
 
     def centralize(self):
         from .app import App
@@ -98,6 +99,8 @@ class InsertProcess(tk.Tk):
         button.image = button_image
         button.place(x=x, y=y, **kwargs)
 
+        return button
+
     # Funções associadas a cada botão
     def button_1_clicked(self):
         self.destroy()
@@ -115,15 +118,23 @@ class InsertProcess(tk.Tk):
             menu_advogado = Menu_advogadoapp()
 
     def button_2_clicked(self):
-        print('O caminho para o arquivo selecionado é')
+        pass
+
+    def button_3_clicked(self):
         # Sendo processo é melhor apenas PDF
         caminho_arquivo = filedialog.askopenfilename(
             filetypes=[('Processo', '*.pdf;*.jpg;*.jpeg;*.png')]
         )
-        print(caminho_arquivo)
+        print('O caminho para o arquivo selecionado é')
+        if caminho_arquivo:
+            texto_caminho = caminho_arquivo
+            if len(caminho_arquivo) > 55:
+                texto_caminho = caminho_arquivo[:53] + '...'
 
-    def button_3_clicked(self):
-        print('button_3 clicked')
+            self.display_path = Label(
+                self, text=texto_caminho, compound='left', fg='black'
+            )
+            self.display_path.place(x=295.0, y=229.0, width=360.0, height=45.0)
 
 
 if __name__ == '__main__':
