@@ -1,0 +1,1 @@
+from .advogado_controller import AdvogadoController
