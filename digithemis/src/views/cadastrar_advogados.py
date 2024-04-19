@@ -1,20 +1,31 @@
 from pathlib import Path
 import tkinter as tk
-from tkinter import Canvas, Entry, Button, PhotoImage
+from tkinter import Canvas, Entry, Button, PhotoImage, Frame, messagebox
+from controllers import AdvogadoController
+from errors import *
 
 
 class RegisterUserApp(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.geometry('1007x641')
+        self.centralize()
         self.configure(bg='#81A69F')
         self.output_path = Path(__file__).parent
         self.assets_path = self.output_path / 'assets'
+
+        self.title('Cadastrar advogado')
+        self.iconbitmap(f'{self.relative_to_assets('favicon.ico')}')
+        
+        self.controlador = AdvogadoController()
 
         self.create_widgets()
 
     def relative_to_assets(self, path: str) -> Path:
         return self.assets_path / Path(path)
+    
+    def centralize(self):
+        from .app import App
+        App.centralize_app(self)
 
     def create_widgets(self):
         self.create_canvas()
@@ -51,6 +62,7 @@ class RegisterUserApp(tk.Tk):
         )
 
         # Adiciona os campos de entrada e seus rótulos
+        list_entries = []
         entries_info = [
             (70.0, 124.0, 418.0, 45.0, 'NOME:'),
             (525.0, 124.0, 418.0, 45.0, 'CPF:'),
@@ -60,7 +72,9 @@ class RegisterUserApp(tk.Tk):
             (525.0, 223.0, 418.0, 45.0, 'OAB:'),
         ]
         for info in entries_info:
-            self.create_entry(*info)
+            list_entries.append(self.create_entry(*info))
+        list_entries[2].config(show='*')
+        self.entries = tuple(list_entries)
 
     def create_entry(self, x, y, width, height, label_text):
         entry_image = PhotoImage(
@@ -69,12 +83,14 @@ class RegisterUserApp(tk.Tk):
         entry_bg = self.canvas.create_image(
             x + 225, y + 22.5, image=entry_image
         )
+        entry_frame = Frame(self, bg='#FFFFFF', padx=10)
+        entry_frame.place(x=x - 10, y=y, width=418.0, height=45.0)
         entry = Entry(
             self, bd=0, bg='#FFFFFF', fg='#000716', highlightthickness=0
         )
         entry.place(x=x, y=y, width=width, height=height)
         self.canvas.create_text(
-            x + 11,  # Offset para alinhar com a entrada
+            x,  # Offset para alinhar com a entrada
             y - 20,  # Offset para alinhar com a entrada
             anchor='nw',
             text=label_text,
@@ -118,12 +134,65 @@ class RegisterUserApp(tk.Tk):
 
     def button_1_clicked(self):
         self.destroy()
-        from .login import LoginApp
+        from .app import App
 
-        login_tela = LoginApp()
+        usuario = App.load_user_state()
+        if usuario['admin']:
+            from .menu_admin import AdminApp
+
+            menu_admin = AdminApp()
+
+        if not usuario['admin']:
+            from .menu_advogado import Menu_advogadoapp
+
+            menu_advogado = Menu_advogadoapp()
 
     def button_2_clicked(self):
-        print('button_2 clicked')
+        nome = self.entries[0].get()
+        cpf = self.entries[1].get()
+        senha = self.entries[2].get()
+        telefone = self.entries[3].get()
+        email = self.entries[4].get()
+        oab = self.entries[5].get()
+
+        if nome and cpf and senha and email and oab and telefone:
+            try:
+                self.controlador.adicionar_advogado(
+                    nome, cpf, oab, email, telefone, senha
+                )
+                messagebox.showinfo(
+                    'Notificação', 'Advogado cadastrado com sucesso'
+                )
+                for entrada in self.entries:
+                    entrada.delete(0, 'end')
+                self.entries[0].focus_set()
+            except RegistroExistenteError:
+                messagebox.showerror(
+                    'Notificação', 'Advogado já está cadastrado no sistema'
+                )
+            except CPFInvalidoError:
+                messagebox.showerror(
+                    'Notificação', 'CPF inválido!'
+                )
+            except OABInvalidaError:
+                messagebox.showerror(
+                    'Notificação', 'OAB inválida!'
+                )
+            except EmailInvalidoError:
+                messagebox.showerror(
+                    'Notificação', 'E-mail inválido!'
+                )
+            except TelefoneInvalidoError:
+                messagebox.showerror(
+                    'Notificação', 'Telefone inválido!'
+                )
+            except Exception as erro:
+                messagebox.showerror(
+                    'Notificação', f'{erro}'
+                )
+                
+        else:
+            messagebox.showwarning('Notificação', f'Preencha todos os campos.')
 
 
 if __name__ == '__main__':
