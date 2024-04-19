@@ -1,7 +1,7 @@
 from pathlib import Path
 import tkinter as tk
-from tkinter import Canvas, Entry, Button, PhotoImage, Frame, messagebox
-from controllers import AdvogadoController
+from tkinter import Canvas, Entry, Button, PhotoImage, Frame, messagebox, StringVar, OptionMenu
+from controllers import AdvogadoController, EspecialidadeController
 from errors import *
 
 
@@ -17,6 +17,7 @@ class RegisterUserApp(tk.Tk):
         self.iconbitmap(f'{self.relative_to_assets('favicon.ico')}')
         
         self.controlador = AdvogadoController()
+        self.controlador_especialidade = EspecialidadeController()
 
         self.create_widgets()
 
@@ -30,6 +31,7 @@ class RegisterUserApp(tk.Tk):
     def create_widgets(self):
         self.create_canvas()
         self.create_buttons()
+        self.create_option_menu()
 
     def create_canvas(self):
         self.canvas = Canvas(
@@ -110,7 +112,7 @@ class RegisterUserApp(tk.Tk):
         )
         self.create_button(
             379.0,
-            455.0,
+            495.0,
             250.0,
             76.0,
             'cadastrar_usuario_button_2.png',
@@ -154,11 +156,12 @@ class RegisterUserApp(tk.Tk):
         telefone = self.entries[3].get()
         email = self.entries[4].get()
         oab = self.entries[5].get()
+        especialidade = self.valor_especialidade.get()
 
         if nome and cpf and senha and email and oab and telefone:
             try:
                 self.controlador.adicionar_advogado(
-                    nome, cpf, oab, email, telefone, senha
+                    nome, cpf, oab, email, telefone, senha, especialidade
                 )
                 messagebox.showinfo(
                     'Notificação', 'Advogado cadastrado com sucesso'
@@ -193,6 +196,23 @@ class RegisterUserApp(tk.Tk):
                 
         else:
             messagebox.showwarning('Notificação', f'Preencha todos os campos.')
+
+    def create_option_menu(self):
+        opcoes = self.controlador_especialidade.lista_especialidades()
+        self.valor_especialidade = StringVar(self)
+        self.valor_especialidade.set(opcoes[0])
+
+        # Cria o OptionMenu e o associa à variável 'valor_selecionado'
+        menu_selecao = OptionMenu(self, self.valor_especialidade, *opcoes)
+        menu_selecao.place(x=60, y=422, width=428, height=45)
+        self.canvas.create_text(
+            70,  
+            402,  
+            anchor='nw',
+            text='ESPECIALIDADE:',
+            fill='#FFFFFF',
+            font=('HammersmithOne Regular', 15 * -1),
+        )
 
 
 if __name__ == '__main__':

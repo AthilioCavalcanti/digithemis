@@ -226,7 +226,7 @@ class SearchApp(tk.Tk):
             yscrollcommand=scrollbar.set,
         )
         for cliente in clientes:
-            client_listbox.insert(tk.END, cliente) # Aqui _________________________________________
+            client_listbox.insert(tk.END, cliente)
         client_listbox.pack(side='left', fill='both', expand=True)
 
         scrollbar.config(command=client_listbox.yview)

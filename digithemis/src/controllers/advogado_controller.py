@@ -1,4 +1,4 @@
-from services import AdvogadoService
+from services import AdvogadoService, EspecialidadeService
 from utils import ValidacaoEntradas
 
 
@@ -6,7 +6,9 @@ class AdvogadoController:
     def __init__(self):
         self.adv_service = AdvogadoService()
 
-    def adicionar_advogado(self, nome, cpf, oab, email, celular, senha):
+    def adicionar_advogado(
+        self, nome, cpf, oab, email, celular, senha, especialidade
+    ):
         try:
             if (
                 ValidacaoEntradas.valida_cpf_cnpj(cpf)
@@ -18,16 +20,20 @@ class AdvogadoController:
                 self.adv_service.cadastra_advogado(
                     nome, cpf, oab, senha, email, celular
                 )
+                self.adv_service.adiciona_especialidade_por_cpf(cpf, especialidade)
+
         except Exception as erro:
             raise erro
 
     def buscar_advogado(self, cpf):
         return self.adv_service.busca_advogado(cpf)
-    
+
     def listar_advogados(self):
         advogados = []
         for advogado in self.adv_service.lista_advogados():
-            advogados.append({'nome': advogado.nome, 'oab': advogado.oab, 'clientes': []})
+            advogados.append(
+                {'nome': advogado.nome, 'oab': advogado.oab, 'clientes': []}
+            )
         return advogados
 
     def atualizar_nome_advogado(self, cpf, nome):
