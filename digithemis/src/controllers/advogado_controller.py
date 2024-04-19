@@ -15,7 +15,7 @@ class AdvogadoController:
     def atualizar_nome_advogado(self, cpf, nome):
         if nome:
             self.adv_service.atualiza_advogado(cpf, 'nome', nome)
-    
+
     def atualizar_email_advogado(self, cpf, email):
         if ValidacaoEntradas.valida_email(email):
             self.adv_service.atualiza_advogado(cpf, 'email', email)
@@ -27,7 +27,7 @@ class AdvogadoController:
     def atualizar_telefone_advogado(self, cpf, telefone):
         if telefone:
             self.adv_service.atualiza_advogado(cpf, 'telefone', telefone)
-    
+
     def atualiza_senha_advogado(self, cpf, senha):
         if ValidacaoEntradas.valida_senha(senha):
             self.atualiza_senha_advogado(cpf, senha)

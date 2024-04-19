@@ -38,6 +38,7 @@ class LoginApp:
 
     def centralize(self):
         from .app import App
+
         App.centralize_app(self.window)
 
     def open_menu(self):
@@ -57,17 +58,17 @@ class LoginApp:
             else:
                 # condicionais de acordo com o erro retornado
                 self.input_password.delete(0, 'end')
-                messagebox.showwarning(
-                    'Notificação', 'Credenciais inválidas.'
-                )
+                messagebox.showwarning('Notificação', 'Credenciais inválidas.')
         else:
-            messagebox.showwarning(
-                'Notificação', 'Preencha todos os campos'
-            )
+            messagebox.showwarning('Notificação', 'Preencha todos os campos')
 
     def open_esqueci(self):
-        self.window.destroy()
-        esqueci_senha = EsqueciSenhaApp()
+        # self.window.destroy()
+        # esqueci_senha = EsqueciSenhaApp()
+        messagebox.showwarning(
+            'Notificação',
+            'Entre em contado com o suporte para recuperação da senha.',
+        )
 
     def get_assets_path(self):
         current_dir = Path(__file__).parent
@@ -157,7 +158,7 @@ class LoginApp:
         )
 
         return entry_1, entry_2
-    
+
     def save_user_state(self, usuario):
         file_path = './user_state.json'
         with open(file_path, 'w', encoding='utf-8') as file:
