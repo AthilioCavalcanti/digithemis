@@ -1,5 +1,17 @@
 import re
-from errors import validacao_error, senha_error
+from errors import (
+    EmailInvalidoError,
+    SenhaCurtaError,
+    SenhaSemMaiusculaError,
+    SenhaSemMinusculaError,
+    SenhaSemNumeroError,
+    SenhaSemCaracterEspecialError,
+    CNPJInvalidoError,
+    CPFInvalidoError,
+    NumeroProcessoInvalidoError,
+    OABInvalidaError,
+    TelefoInvalidoError,
+)
 
 
 class ValidacaoEntradas:
@@ -9,24 +21,24 @@ class ValidacaoEntradas:
         regex_email = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
         if re.match(regex_email, email):
             return True
-        raise validacao_error.EmailInvalidoError()
+        raise EmailInvalidoError()
 
     @staticmethod
     def valida_senha(senha):
         if len(senha) < 6:
-            raise senha_error.SenhaCurtaError()
+            raise SenhaCurtaError()
 
         if not re.search(r'[A-Z]', senha):
-            raise senha_error.SenhaSemMaiusculaError()
+            raise SenhaSemMaiusculaError()
 
         if not re.search(r'[a-z]', senha):
-            raise senha_error.SenhaSemMinusculaError()
+            raise SenhaSemMinusculaError()
 
         if not re.search(r'\d', senha):
-            raise senha_error.SenhaSemNumeroError()
+            raise SenhaSemNumeroError()
 
         if not re.search(r'[^\w\s]', senha):
-            raise senha_error.SenhaSemCaracterEspecialError()
+            raise SenhaSemCaracterEspecialError()
 
         return True
 
@@ -36,7 +48,7 @@ class ValidacaoEntradas:
 
         if len(documento) == 11:
             if documento == documento[0] * 11:
-                raise validacao_error.CPFInvalidoError()
+                raise CPFInvalidoError()
 
             soma, multiplicador = 0, 10
             nove_primeiros_digitos = documento[:-2]
@@ -68,11 +80,11 @@ class ValidacaoEntradas:
             if cpf == documento:
                 return True
             else:
-                raise validacao_error.CPFInvalidoError()
+                raise CPFInvalidoError()
 
         if len(documento) == 14:
             if documento == documento[0] * 14:
-                raise validacao_error.CNPJInvalidoError()
+                raise CNPJInvalidoError()
 
             soma, multiplicador = 0, 5
             doze_primeiros_digitos = documento[:-2]
@@ -108,7 +120,7 @@ class ValidacaoEntradas:
             if cnpj == documento:
                 return True
             else:
-                raise validacao_error.CNPJInvalidoError()
+                raise CNPJInvalidoError()
 
         raise Exception('Formato inválido')
 
@@ -134,14 +146,14 @@ class ValidacaoEntradas:
             )
             return numero_formatado
         else:
-            raise validacao_error.NumeroProcessoInvalidoError()
+            raise NumeroProcessoInvalidoError()
 
     @staticmethod
     def valida_num_processo(num_processo):
         regex_num_processo = r'^\d{7}-\d{2}\.\d{4}\.8\.19\.\d{4}$'
         if re.match(regex_num_processo, num_processo):
             return True
-        raise validacao_error.NumeroProcessoInvalidoError()
+        raise NumeroProcessoInvalidoError()
 
     @staticmethod
     def valida_oab(oab):
@@ -181,9 +193,9 @@ class ValidacaoEntradas:
             if oab[:2] in estados:
                 return True
             else:
-                return False
+                raise OABInvalidaError()
         else:
-            return False
+            raise OABInvalidaError()
 
     @staticmethod
     def valida_telefone(telefone):
@@ -191,4 +203,4 @@ class ValidacaoEntradas:
         if re.match(regex_telefone, telefone):
             return True
         else:
-            raise Exception('Número de telefone inválido')
+            raise TelefoInvalidoError()
