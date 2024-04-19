@@ -85,8 +85,8 @@ class EditProfileApp:
 
     def botao_2_clicado(self):
         self.janela.destroy()
-        # from mudar_numero import AplicativoMudadorNumero
-        # editar = AplicativoMudadorNumero(self.user)
+        from .mudar_numero import AplicativoMudadorNumero
+        editar = AplicativoMudadorNumero()
 
     def botao_3_clicado(self):
         self.janela.destroy()

@@ -1,6 +1,8 @@
 from pathlib import Path
 import tkinter as tk
-from tkinter import Canvas, Entry, Button, PhotoImage, Frame
+from tkinter import Canvas, Entry, Button, PhotoImage, Frame, messagebox
+from controllers import AdvogadoController
+from errors import OABInvalidaError
 
 
 class ChangeOABApp(tk.Tk):
@@ -12,14 +14,16 @@ class ChangeOABApp(tk.Tk):
         self.assets_path = self.output_path / 'assets'
         self.title('Mudar OAB')
         self.iconbitmap(f'{self.relative_to_assets('favicon.ico')}')
+        self.controlador = AdvogadoController()
 
         self.create_widgets()
 
     def relative_to_assets(self, path: str) -> Path:
         return self.assets_path / Path(path)
-    
+
     def centralize(self):
         from .app import App
+
         App.centralize_app(self)
 
     def create_widgets(self):
@@ -126,7 +130,27 @@ class ChangeOABApp(tk.Tk):
         edit = EditProfileApp()
 
     def button_2_clicked(self):
-        print('button_2 clicked')
+        oab = self.entry_new_oab.get()
+        if oab:
+            try:
+                from .app import App
+
+                if App.load_user_state()['oab'] == oab:
+                    messagebox.showwarning(
+                        'Notificação',
+                        'Atualize sua OAB antes de tentar alterar.',
+                    )
+                else:
+                    cpf = App.load_user_state()['cpf']
+                    self.controlador.atualizar_telefone_advogado(cpf, oab)
+                    messagebox.showinfo(
+                        'Notificação', 'OAB atualizada com sucesso!'
+                    )
+                    App.update_user_state('oab', oab)
+            except OABInvalidaError as erro:
+                messagebox.showerror('Notificação', f'{erro}')
+        else:
+            messagebox.showwarning('Notificação', 'Preencha o campo OAB.')
 
 
 if __name__ == '__main__':

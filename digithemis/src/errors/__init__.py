@@ -11,7 +11,7 @@ from .validacao_error import (
     EmailInvalidoError,
     CPFInvalidoError,
     CNPJInvalidoError,
-    TelefoInvalidoError,
+    TelefoneInvalidoError,
     OABInvalidaError,
     NumeroProcessoInvalidoError,
 )

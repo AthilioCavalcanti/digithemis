@@ -2,6 +2,7 @@ from pathlib import Path
 import tkinter as tk
 from tkinter import Canvas, Entry, Button, PhotoImage, Frame, messagebox
 from controllers import AdvogadoController
+from errors import EmailInvalidoError
 
 
 class ChangeEmailApp(tk.Tk):
@@ -71,6 +72,9 @@ class ChangeEmailApp(tk.Tk):
         from .app import App
 
         self.entry_old_email.insert(0, App.load_user_state()['email'])
+        self.entry_old_email.config(
+            state='disable', disabledbackground='#FFFFFF'
+        )
 
     def create_entry(self, x, y, width, height, label_text):
         entry_image = PhotoImage(
@@ -127,22 +131,31 @@ class ChangeEmailApp(tk.Tk):
         button.place(x=x, y=y, width=width, height=height)
 
     def button_1_clicked(self):
-        try:
-            from .app import App
+        novo_email = self.entry_new_email.get()
+        if novo_email:
+            try:
+                from .app import App
 
-            cpf = App.load_user_state()['cpf']
-            novo_email = self.entry_new_email.get()
-            self.controlador.atualizar_advogado(cpf, 'email', novo_email)
-            # Atualizar arquivo json de estado do usuário
-            # Atualizar campo de old email
-            # exibir notificação de sucesso
-            messagebox.showinfo(
-                'Notificação', 'Email atualizado com sucesso'
-            )
+                if novo_email == App.load_user_state()['email']:
+                    messagebox.showwarning(
+                        'Notificação',
+                        'Atualize o email antes de tentar alterar.',
+                    )
+                else:
+                    cpf = App.load_user_state()['cpf']
+                    self.controlador.atualizar_email_advogado(cpf, novo_email)
+                    messagebox.showinfo(
+                        'Notificação', 'Email atualizado com sucesso'
+                    )
 
-        except Exception as erro:
-            messagebox.showerror(
-                'Notificação', f'{erro}'
+                    App.update_user_state('email', novo_email)
+            except EmailInvalidoError as erro_email:
+                messagebox.showerror('Notificação', f'{erro_email}')
+            except Exception as erro:
+                messagebox.showerror('Notificação', f'{erro}')
+        else:
+            messagebox.showwarning(
+                'Notificação', 'Preencha o campo de novo email.'
             )
 
     def button_2_clicked(self):

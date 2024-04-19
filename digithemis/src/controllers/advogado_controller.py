@@ -21,16 +21,21 @@ class AdvogadoController:
             self.adv_service.atualiza_advogado(cpf, 'email', email)
 
     def atualizar_oab_advogado(self, cpf, oab):
-        if ValidacaoEntradas.valida_oab:
+        if ValidacaoEntradas.valida_oab(oab):
             self.adv_service.atualiza_advogado(cpf, 'oab', oab)
 
     def atualizar_telefone_advogado(self, cpf, telefone):
-        if telefone:
+        if ValidacaoEntradas.valida_telefone(telefone):
             self.adv_service.atualiza_advogado(cpf, 'telefone', telefone)
 
-    def atualiza_senha_advogado(self, cpf, senha):
+    def atualizar_senha_advogado(self, cpf, senha):
         if ValidacaoEntradas.valida_senha(senha):
-            self.atualiza_senha_advogado(cpf, senha)
+            self.atualiza_advogado(cpf, 'senha', senha)
+
+    def verifica_senha(self, cpf, senha):
+        if self.adv_service.valida_senha(cpf, senha):
+            return True
+        return False
 
     def validar_acesso(self, cpf, senha):
         try:

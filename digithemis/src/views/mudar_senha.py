@@ -1,6 +1,7 @@
 from pathlib import Path
 import tkinter as tk
-from tkinter import Canvas, Entry, Button, PhotoImage, Frame
+from tkinter import Canvas, Entry, Button, PhotoImage, Frame, messagebox
+from controllers import AdvogadoController
 
 
 class ChangePasswordApp(tk.Tk):
@@ -12,14 +13,16 @@ class ChangePasswordApp(tk.Tk):
         self.assets_path = self.output_path / 'assets'
         self.title('Mudar senha')
         self.iconbitmap(f'{self.relative_to_assets('favicon.ico')}')
+        self.controlador = AdvogadoController()
 
         self.create_widgets()
 
     def relative_to_assets(self, path: str) -> Path:
         return self.assets_path / Path(path)
-    
+
     def centralize(self):
         from .app import App
+
         App.centralize_app(self)
 
     def create_widgets(self):
@@ -58,12 +61,14 @@ class ChangePasswordApp(tk.Tk):
         )
 
     def create_entries(self):
-        self.entry_new_password = self.create_entry(
+        self.entry_old_password = self.create_entry(
             295.0, 209.0, 418.0, 45.0, 'SENHA ANTIGA:'
         )
-        self.entry_old_password = self.create_entry(
+        self.entry_old_password.config(show='*')
+        self.entry_new_password = self.create_entry(
             295.0, 340.0, 418.0, 45.0, 'SENHA NOVA:'
         )
+        self.entry_new_password.config(show='*')
 
     def create_entry(self, x, y, width, height, label_text):
         entry_image = PhotoImage(
@@ -120,7 +125,29 @@ class ChangePasswordApp(tk.Tk):
         button.place(x=x, y=y, width=width, height=height)
 
     def button_1_clicked(self):
-        print('button_1 clicked')
+        nova_senha = self.entry_new_password.get()
+        atual_senha = self.entry_old_password.get()
+        if atual_senha and nova_senha:
+            try:
+                from .app import App
+
+                cpf = App.load_user_state()['cpf']
+                if self.controlador.verifica_senha(cpf, atual_senha):
+                    self.controlador.atualizar_senha_advogado(cpf, nova_senha)
+                    messagebox.showinfo(
+                        'Notificação', 'Senha atualizada com sucesso!'
+                    )
+                else:
+                    messagebox.showwarning(
+                        'Notificação', 'Senha antiga inválida.'
+                    )
+
+            except ValueError as erro:
+                messagebox.showerror('Notificação', f'{erro}')
+        else:
+            messagebox.showwarning(
+                'Notificação', 'Preencha os campos de senha.'
+            )
 
     def button_2_clicked(self):
         self.destroy()

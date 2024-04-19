@@ -28,7 +28,7 @@ class OABInvalidaError(ValueError):
         super().__init__(self.mensagem)
 
 
-class TelefoInvalidoError(ValueError):
+class TelefoneInvalidoError(ValueError):
     def __init__(self, message='Número de telefone inválido.'):
         self.mensagem = message
         super().__init__(self.mensagem)

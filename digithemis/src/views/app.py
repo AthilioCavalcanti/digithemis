@@ -61,6 +61,20 @@ class App:
         else:
             return None
 
+    @staticmethod
+    def update_user_state(field, value):
+        user_state = App.load_user_state()
+        fields = ['nome', 'email', 'oab', 'contato']
+        if user_state and field in fields:
+            user_state[field] = value
+            file_name = './user_state.json'
+            file_path = os.path.abspath(file_name)
+            with open(file_path, 'w', encoding='utf-8') as file:
+                json.dump(user_state, file, ensure_ascii=False)
+            return True
+        else:
+            return False
+
 
 if __name__ == '__main__':
     app = Menu_advogadoapp()
