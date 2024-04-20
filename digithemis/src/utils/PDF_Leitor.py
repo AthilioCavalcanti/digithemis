@@ -15,9 +15,3 @@ def converter_pdf_para_imagens(pdf_path, output_folder):
         imagem.save(imagem_path, "JPEG")
 
     print("Conversão concluída. Imagens salvas em:", output_folder)
-
-# Exemplo de uso:
-pdf_path = "Documentos\Contrato 01.pdf"
-output_folder = "C:\\Users\\Windows10\\Desktop\\OCR\\Imagem_PDF"
-
-converter_pdf_para_imagens(pdf_path, output_folder)
