@@ -8,8 +8,10 @@ from tkinter import (
     Text,
     Label,
     Frame,
+    filedialog,
 )
 from controllers import ClienteController
+from utils import OCR
 
 
 class AplicativoPerfilCliente:
@@ -163,7 +165,7 @@ class AplicativoPerfilCliente:
 
         canvas = Canvas(frame, bg='white', bd=0, highlightthickness=0)
         canvas.pack(side='left', fill='both', expand=True)
-        # Crie uma barra de rolagem para o widget Text
+        
         scrollbar = Scrollbar(frame, orient='vertical', command=canvas.yview)
         scrollbar.pack(side='right', fill='y')
 
@@ -225,7 +227,12 @@ class AplicativoPerfilCliente:
 
     def botao_3_clicado(self):
         print('Buscando documentos do cliente...')
-        # se achar docuemntos e ter sucesso ao registrar, recarregar quadro de documentos
+        caminho_diretorio = filedialog.askdirectory()
+        docs = OCR.buscar_palavra_em_arquivos(caminho_diretorio, self.cliente['nome'].upper())
+        print(docs)
+        # se achar documentos e ter sucesso ao registrar, recarregar quadro de documentos
+        # if docs:
+        #     self.criar_quadro_docs()
 
 
 if __name__ == '__main__':

@@ -30,13 +30,15 @@ class SearchApp(tk.Tk):
 
         # Lista para pesquisa
         from .app import App
-        self.search_data = (
-            self.controlador_cliente.listar_clientes_especialidade(
-                self.controlador_adv.especialidade_advogado(
-                    App.load_user_state()['cpf']
-                )
-            )
-        )
+        # Quando limitar por especialidade
+        # self.search_data = (
+        #     self.controlador_cliente.listar_clientes_especialidade(
+        #         self.controlador_adv.especialidade_advogado(
+        #             App.load_user_state()['cpf']
+        #         )
+        #     )
+        # )
+        self.search_data = self.controlador_cliente.listar_clientes()
 
         self.create_widgets()
 
@@ -203,45 +205,6 @@ class SearchApp(tk.Tk):
         from .detalhes_cliente import AplicativoPerfilCliente
 
         detalhes_cliente = AplicativoPerfilCliente(cliente)
-
-        # Encontra os documentos da pessoa clicada
-        # documentos = [
-        #     result['documentos']
-        #     for result in self.search_data
-        #     if result['nome'] == item
-        # ][0]
-
-        # # Abre uma janela com os documentos da pessoa
-        # profile_window = Toplevel(self)
-        # profile_window.title('Cliente')
-        # profile_window.iconbitmap(f'{self.relative_to_assets('favicon.ico')}')
-        # from .app import App
-
-        # App.centralize_app(profile_window, 400, 500)
-
-        # # Exibe os documentos na janela
-        # label = Label(
-        #     profile_window, text=f'Documentos de {item}:', font=('Arial', 12)
-        # )
-        # label.pack()
-
-        # for documento in documentos:
-        #     # Torna os documentos clicáveis
-        #     label_doc = Label(
-        #         profile_window, text=documento, fg='blue', cursor='hand2'
-        #     )
-        #     label_doc.pack()
-        #     label_doc.bind(
-        #         '<Button-1>',
-        #         lambda event, doc=documento: self.document_clicked(doc),
-        #     )
-        
-        # button = Button(profile_window, text="Adcionar Documentos", bg='#262223', fg="#FFFFFF", command=self.button_add_docs_clicked)
-        # button.pack(pady=50)
-
-    # def document_clicked(self, documento):
-    #     # Ação ao clicar em um documento
-    #     messagebox.showinfo('Documento Clicado', f'Você clicou em {documento}')
 
     def button_1_clicked(self):
         self.destroy()

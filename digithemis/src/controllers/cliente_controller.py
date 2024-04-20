@@ -17,7 +17,16 @@ class ClienteController:
             raise erro
 
     def listar_clientes(self):
-        return self.cliente.lista_clientes()
+        clientes = []
+        for c in self.cliente.lista_clientes():
+            clientes.append(
+                {
+                    'nome': c.nome,
+                    'cpf_cnpj': c.cpf_cnpj,
+                    'documentos': []
+                }
+            )
+        return clientes
 
     def listar_clientes_especialidade(self, tipo_especialidade):
         clientes = []

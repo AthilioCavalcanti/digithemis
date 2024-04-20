@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import pytesseract
 import os
-from Imagem import Converte_cinza, filtro_bilateral, segmentar, contornos_internos, corretor_rotacao
+from .Imagem import Converte_cinza, filtro_bilateral, segmentar, contornos_internos, corretor_rotacao
 
 def ler_imagem(caminho):
     # Carrega a imagem
