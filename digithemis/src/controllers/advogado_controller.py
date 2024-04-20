@@ -1,10 +1,11 @@
-from services import AdvogadoService, EspecialidadeService
+from services import AdvogadoService, ProcessoService
 from utils import ValidacaoEntradas
 
 
 class AdvogadoController:
     def __init__(self):
         self.adv_service = AdvogadoService()
+        self.processo_service = ProcessoService()
 
     def adicionar_advogado(
         self, nome, cpf, oab, email, celular, senha, especialidade
@@ -20,7 +21,9 @@ class AdvogadoController:
                 self.adv_service.cadastra_advogado(
                     nome, cpf, oab, senha, email, celular
                 )
-                self.adv_service.adiciona_especialidade_por_cpf(cpf, especialidade)
+                self.adv_service.adiciona_especialidade_por_cpf(
+                    cpf, especialidade
+                )
 
         except Exception as erro:
             raise erro
@@ -32,7 +35,13 @@ class AdvogadoController:
         advogados = []
         for advogado in self.adv_service.lista_advogados():
             advogados.append(
-                {'nome': advogado.nome, 'oab': advogado.oab, 'clientes': []}
+                {
+                    'nome': advogado.nome,
+                    'oab': advogado.oab,
+                    'processos': self.lista_processos_especialidade(
+                        self.especialidade_advogado(advogado.cpf)
+                    ),
+                }
             )
         return advogados
 
@@ -85,3 +94,23 @@ class AdvogadoController:
                 }
         except Exception as e:
             return {'acesso': False, 'error': str(e), 'estado': {}}
+
+    def lista_processos_especialidade(self, tipo_especialidade):
+        processos = []
+        for (
+            processo
+        ) in self.processo_service.lista_processos_por_especialidade(
+            tipo_especialidade
+        ):
+            processos.append(
+                {
+                    'numero': processo.num_processo,
+                    'comarca': processo.comarca,
+                    'vara': processo.vara,
+                    'distribuicao': processo.data_distribuicao,
+                }
+            )
+        return processos
+
+    def especialidade_advogado(self, cpf):
+        return self.adv_service.especialidade_do_advogado(cpf)

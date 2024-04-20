@@ -1,6 +1,6 @@
 from config import ConexaoDB
 from errors import RegistroExistenteError, RegistroNaoExistenteError
-from models import Processo, ProcessoCliente, Cliente
+from models import Processo, ProcessoCliente, Cliente, Especialidade
 
 
 class ProcessoService:
@@ -122,3 +122,59 @@ class ProcessoService:
                 return processos
             except Exception as erro:
                 return ['Deu ruim']
+            
+
+    def adiciona_processo_cliente(self, cpf_cliente, num_processo):
+        with self.conexao as con:
+            try:
+                cliente = (
+                    con.session.query(Cliente)
+                    .filter_by(cpf_cnpj=cpf_cliente)
+                    .first()
+                )
+                processo = (
+                    con.session.query(Processo)
+                    .filter_by(num_processo=num_processo)
+                    .first()
+                )
+
+                if not cliente:
+                    raise RegistroNaoExistenteError('Cliente não encontrado')
+
+                if not processo:
+                    raise RegistroNaoExistenteError('Processo não encontrado')
+
+                processo_cliente = ProcessoCliente(
+                    id_cliente=cliente.id_cliente,
+                    id_processo=processo.id_processo
+                )
+                con.session.add(processo_cliente)
+                con.session.commit()
+            except RegistroNaoExistenteError as erro:
+                raise erro
+                
+            except Exception as erro:
+                con.session.rollback()
+                raise erro
+            
+    def lista_processos_por_especialidade(self, nome_especialidade):
+        with self.conexao as con:
+            try:
+                especialidade = (
+                    con.session.query(Especialidade)
+                    .filter_by(tipo=nome_especialidade)
+                    .first()
+                )
+
+                if not especialidade:
+                    return []
+
+                processos = (
+                    con.session.query(Processo)
+                    .filter_by(id_especialidade=especialidade.id_especialidade, ativo=True)
+                    .all()
+                )
+
+                return processos
+            except Exception as erro:
+                raise erro

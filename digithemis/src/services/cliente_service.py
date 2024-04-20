@@ -1,6 +1,6 @@
 from config import ConexaoDB
 from errors import RegistroExistenteError, RegistroNaoExistenteError
-from models import Cliente
+from models import Cliente, Especialidade, ProcessoCliente, Processo
 
 
 class ClienteService:
@@ -78,4 +78,30 @@ class ClienteService:
                     )
             except Exception as erro:
                 con.session.rollback()
+                raise erro
+            
+    def lista_clientes_por_especialidade(self, nome_especialidade):
+        with self.conexao as con:
+            try:
+                especialidade = (
+                    con.session.query(Especialidade)
+                    .filter_by(tipo=nome_especialidade)
+                    .first()
+                )
+
+                if not especialidade:
+                    return []
+
+                clientes = (
+                    con.session.query(Cliente)
+                    .join(ProcessoCliente)
+                    .join(Processo)
+                    .filter(Processo.id_especialidade == especialidade.id_especialidade, Processo.ativo == True)
+                    .distinct()
+                    .all()
+                )
+
+                return clientes
+
+            except Exception as erro:
                 raise erro

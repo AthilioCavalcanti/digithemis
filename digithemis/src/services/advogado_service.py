@@ -114,3 +114,27 @@ class AdvogadoService:
             except Exception as erro:
                 con.session.rollback()
                 raise erro
+            
+    def especialidade_do_advogado(self, cpf_advogado):
+        with self.conexao as con:
+            try:
+                advogado = (
+                    con.session.query(Advogado)
+                    .filter_by(cpf=cpf_advogado)
+                    .first()
+                )
+
+                if not advogado:
+                    return None
+
+                especialidade = (
+                    con.session.query(Especialidade)
+                    .join(AdvogadoEspecialidade)
+                    .filter(AdvogadoEspecialidade.id_advogado == advogado.id_advogado)
+                    .first()
+                )
+
+                return especialidade.tipo if especialidade else None
+
+            except Exception as erro:
+                raise erro
