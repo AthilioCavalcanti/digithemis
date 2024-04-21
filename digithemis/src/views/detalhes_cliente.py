@@ -9,6 +9,8 @@ from tkinter import (
     Label,
     Frame,
     filedialog,
+    Toplevel,
+    ttk,
 )
 from controllers import ClienteController
 from utils import OCR
@@ -236,16 +238,40 @@ class AplicativoPerfilCliente:
             print(f"Erro ao abrir o arquivo: {e}")
 
     def botao_3_clicado(self):
-        print('Buscando documentos do cliente...')
+        import threading
+
         caminho_diretorio = filedialog.askdirectory()
-        docs = OCR.buscar_palavra_em_pdf_imagens(caminho_diretorio, self.cliente['nome'].upper())
-        # print(docs)
-        # se achar documentos e ter sucesso ao registrar, recarregar quadro de documentos
-        self.controlador_cliente.salvar_documentos_cliente(
-            self.cliente['cpf_cnpj'], docs
-        )
-        if docs:
-            self.criar_quadro_docs()
+        popup_carregamento = self.popup_carregamento('Carregando documentos...')
+
+        def carregar_documentos():
+            docs = OCR.buscar_palavra_em_pdf_imagens(caminho_diretorio, self.cliente['nome'].upper())
+            self.controlador_cliente.salvar_documentos_cliente(
+                self.cliente['cpf_cnpj'], docs
+            )
+            if docs:
+                self.criar_quadro_docs()
+            
+            popup_carregamento.destroy()
+
+        linha_execucao = threading.Thread(target=carregar_documentos)
+        linha_execucao.start()
+
+    def popup_carregamento(self, texto):
+        popup = Toplevel(self.janela)
+        popup.title("Aguarde")
+        from .app import App
+        App.centralize_app(popup, 400, 200)
+        popup.iconbitmap(f'{self.caminho_relativo_assets('favicon.ico')}')
+        
+        label = ttk.Label(popup, text=texto, font=('Arial', 14))
+        label.pack(pady=10)
+        
+        progress = ttk.Progressbar(popup, mode='indeterminate')
+        progress.pack(pady=10)
+        progress.start()
+        
+        popup.grab_set()
+        return popup
 
 
 if __name__ == '__main__':
