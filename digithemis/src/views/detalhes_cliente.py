@@ -228,7 +228,7 @@ class AplicativoPerfilCliente:
     def botao_3_clicado(self):
         print('Buscando documentos do cliente...')
         caminho_diretorio = filedialog.askdirectory()
-        docs = OCR.buscar_palavra_em_arquivos(caminho_diretorio, self.cliente['nome'].upper())
+        docs = OCR.buscar_palavra_em_pdf_imagens(caminho_diretorio, self.cliente['nome'].upper())
         print(docs)
         # se achar documentos e ter sucesso ao registrar, recarregar quadro de documentos
         # if docs:

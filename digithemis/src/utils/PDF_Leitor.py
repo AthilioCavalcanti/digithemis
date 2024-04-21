@@ -1,5 +1,6 @@
 from pdf2image import convert_from_path
 import os
+import numpy as np
 
 def converter_pdf_para_imagens(pdf_path, output_folder):
     # Verificar se o diretório de saída existe, caso contrário, criar
@@ -15,3 +16,10 @@ def converter_pdf_para_imagens(pdf_path, output_folder):
         imagem.save(imagem_path, "JPEG")
 
     print("Conversão concluída. Imagens salvas em:", output_folder)
+
+def converter_pdf_para_lista_imagens(pdf_path):
+    imagens = convert_from_path(pdf_path)
+
+    imagens_np = [np.array(imagem) for imagem in imagens]
+
+    return imagens_np
