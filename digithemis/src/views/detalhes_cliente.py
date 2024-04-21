@@ -1,9 +1,21 @@
 from pathlib import Path
-from tkinter import Tk, Canvas, Button, PhotoImage, Scrollbar, Text
+from tkinter import (
+    Tk,
+    Canvas,
+    Button,
+    PhotoImage,
+    Scrollbar,
+    Text,
+    Label,
+    Frame,
+    filedialog,
+)
+from controllers import ClienteController
+from utils import OCR
 
 
-class AplicativoPerfilAdvogado:
-    def __init__(self):
+class AplicativoPerfilCliente:
+    def __init__(self, cliente=None):
         self.janela = Tk()
         self.centralize()
         self.janela.configure(bg='#81A69F')
@@ -21,12 +33,16 @@ class AplicativoPerfilAdvogado:
 
         self.caminho_relativo_assets = self._caminho_relativo_assets
 
-        self.janela.title('Perfil')
+        self.janela.title('Detalhes Cliente')
         self.janela.iconbitmap(f'{self.caminho_relativo_assets('favicon.ico')}')
+
+        self.cliente = cliente
+        self.controlador_cliente = ClienteController()
 
         self.criar_imagens()
         self.criar_botoes()
         self.criar_quadro_informacoes()
+        self.criar_quadro_docs()
         self.exibir_informacoes()
 
         self.janela.resizable(False, False)
@@ -63,10 +79,16 @@ class AplicativoPerfilAdvogado:
         info_botoes = [
             (18.0, 14.0, 'perfil_advogado_button_1.png', self.botao_1_clicado),
             (
-                352.0,
+                342.0,
                 561.0,
-                'perfil_advogado_button_2.png',
+                'cliente_atualizar_button.png',
                 self.botao_2_clicado,
+            ),
+            (
+                52.0,
+                561.0,
+                'cliente_carregar_docs_button.png',
+                self.botao_3_clicado,
             ),
         ]
         for informacao in info_botoes:
@@ -89,7 +111,6 @@ class AplicativoPerfilAdvogado:
             x=x, y=y, width=imagem_botao.width(), height=imagem_botao.height()
         )
 
-    # Funções associadas a cada botão
     def botao_1_clicado(self):
         self.janela.destroy()
         from .app import App
@@ -106,16 +127,13 @@ class AplicativoPerfilAdvogado:
             menu_advogado = Menu_advogadoapp()
 
     def botao_2_clicado(self):
-        self.janela.destroy()
-        from .editar_perfil import EditProfileApp
-
-        editar = EditProfileApp()
+        print('Ir para janela de edição de dados de cliente')
 
     def criar_quadro_informacoes(self):
         self.informacoes_frame = Canvas(
             self.janela, bg='white', bd=0, highlightthickness=0
         )
-        self.informacoes_frame.place(x=50, y=100, width=500, height=400)
+        self.informacoes_frame.place(x=50, y=50, width=500, height=220)
 
         self.scrollbar = Scrollbar(
             self.informacoes_frame,
@@ -128,31 +146,94 @@ class AplicativoPerfilAdvogado:
             self.informacoes_frame,
             wrap='word',
             yscrollcommand=self.scrollbar.set,
-            font=('Arial', 20),
+            font=('Arial', 16),
         )
         self.informacoes_texto.pack(side='left', fill='both', expand=True)
 
-    def exibir_informacoes(self):
-        from .app import App
-
-        usuario_infos = App.load_user_state()
-
-        self.informacoes_texto.tag_configure(
-            'bold', font=('Arial', 25, 'bold')
+    def criar_quadro_docs(self):
+        label = Label(
+            self.janela, text=f'Documentos de {self.cliente['nome']}:', bg='#80A59E', font=('Arial', 12, 'bold')
+        )
+        label.place(x=50, y=290)
+        
+        documentos = self.controlador_cliente.busca_documentos_cliente(
+            self.cliente['cpf_cnpj']
         )
 
-        titulos = ['Nome:', 'Email:', 'OAB:', 'Telefone:', 'CPF:']
+        frame = Frame(self.janela)
+        frame.place(x=50, y=320, width=500, height=180)
+
+        canvas = Canvas(frame, bg='white', bd=0, highlightthickness=0)
+        canvas.pack(side='left', fill='both', expand=True)
+        
+        scrollbar = Scrollbar(frame, orient='vertical', command=canvas.yview)
+        scrollbar.pack(side='right', fill='y')
+
+        canvas.configure(yscrollcommand=scrollbar.set)
+
+        inner_frame = Frame(canvas, bg='white')
+        canvas.create_window((0, 0), window=inner_frame, anchor='nw')
+
+        text = Text(
+            inner_frame,
+            wrap='word',
+            width=80,
+            height=10,
+            cursor='arrow',
+            font=('Arial', 12, 'bold'),
+        )
+        text.pack(fill='both', expand=True)
+
+        if documentos:
+            for documento in documentos:
+                text.insert(
+                    'end',
+                    f"Link {documento['titulo']}\n",
+                    f"link_{documento['titulo']}",
+                )
+                text.tag_bind(
+                    f"link_{documento['titulo']}",
+                    '<Button-1>',
+                    lambda event, doc=documento: self.document_clicked(doc),
+                )
+            text.config(fg='blue', state='disabled')
+        else:
+            text.insert('end', 'Sem documentos registrados')
+            text.config(fg='gray', state='disabled')
+
+        inner_frame.update_idletasks()
+        canvas.config(scrollregion=canvas.bbox('all'))
+
+    def exibir_informacoes(self):
+        self.informacoes_texto.tag_configure(
+            'bold', font=('Arial', 16, 'bold')
+        )
+
+        titulos = ['Nome:', 'CPF:', 'Email:', 'Telefone:', 'Empresa:']
         infos = [
-            usuario_infos['nome'],
-            usuario_infos['email'],
-            usuario_infos['oab'],
-            usuario_infos['contato'],
-            usuario_infos['cpf'],
+            self.cliente['nome'],
+            self.cliente['cpf_cnpj'],
+            self.cliente['email'],
+            self.cliente['contato'],
+            'SIM' if self.cliente['empresa'] else 'NÃO',
         ]
         for titulo, info in zip(titulos, infos):
             self.informacoes_texto.insert('end', titulo, 'bold')
             self.informacoes_texto.insert('end', f' {info}\n\n')
+        self.informacoes_texto.config(fg='black', state='disabled')
+
+    def document_clicked(self, doc):
+        print(doc)
+
+    def botao_3_clicado(self):
+        print('Buscando documentos do cliente...')
+        caminho_diretorio = filedialog.askdirectory()
+        docs = OCR.buscar_palavra_em_pdf_imagens(caminho_diretorio, self.cliente['nome'].upper())
+        print(docs)
+        # se achar documentos e ter sucesso ao registrar, recarregar quadro de documentos
+        # if docs:
+        #     self.criar_quadro_docs()
 
 
 if __name__ == '__main__':
-    app = AplicativoPerfilAdvogado()
+    app = AplicativoPerfilCliente()

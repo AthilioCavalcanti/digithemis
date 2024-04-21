@@ -145,7 +145,6 @@ class RegisterClientApp(tk.Tk):
             menu_advogado = Menu_advogadoapp()
 
     def button_2_clicked(self):
-        print('button_2 clicked')
         nome = self.entries[0].get()
         cpf_cnpj = self.entries[1].get()
         email = self.entries[2].get()

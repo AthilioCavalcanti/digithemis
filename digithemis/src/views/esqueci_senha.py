@@ -5,7 +5,7 @@ from tkinter import Tk, Canvas, Entry, Button, PhotoImage
 class EsqueciSenhaApp:
     def __init__(self):
         self.window = Tk()
-        self.window.geometry('1007x641')
+        self.centralize()
         self.window.configure(bg='#81A69F')
 
         self.canvas = Canvas(
@@ -21,6 +21,9 @@ class EsqueciSenhaApp:
 
         self.assets_path = self.get_assets_path()
 
+        self.window.title('Recuperação de senha')
+        self.window.iconbitmap(f'{self.get_assets_path()}\\favicon.ico')
+
         self.create_widgets()
 
         self.window.resizable(False, False)
@@ -30,6 +33,11 @@ class EsqueciSenhaApp:
         current_dir = Path(__file__).parent
         assets_path = current_dir / 'assets'
         return assets_path
+    
+    def centralize(self):
+        from .app import App
+
+        App.centralize_app(self.window)
 
     def create_widgets(self):
         self.create_canvas()

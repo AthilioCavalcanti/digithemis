@@ -49,7 +49,7 @@ class AdminApp:
         button_info = [
             (127.0, 406.0, 'admin_button_1.png', self.button_1_clicked),
             (437.0, 406.0, 'admin_button_2.png', self.button_2_clicked),
-            (747.0, 406.0, 'admin_button_3.png', self.button_3_clicked),
+            (747.0, 406.0, 'admin_button_3b.png', self.button_3_clicked),
             (437.0, 209.0, 'admin_button_4.png', self.button_4_clicked),
             (127.0, 209.0, 'admin_button_5.png', self.button_5_clicked),
             (747.0, 209.0, 'admin_button_6.png', self.button_6_clicked),
@@ -87,7 +87,10 @@ class AdminApp:
         procurar = SearchApp()
 
     def button_3_clicked(self):
-        print('Button 3 clicked')
+        self.window.destroy()
+        from .cadastrar_advogados import RegisterUserApp
+
+        cadastra_advogado = RegisterUserApp()
 
     def button_4_clicked(self):
         self.window.destroy()

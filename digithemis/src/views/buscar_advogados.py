@@ -10,6 +10,7 @@ from tkinter import (
     messagebox,
     Frame,
 )
+from controllers import AdvogadoController
 
 
 class SearchApp(tk.Tk):
@@ -21,15 +22,10 @@ class SearchApp(tk.Tk):
         self.assets_path = self.output_path / 'assets'
         self.title('Buscar advogados')
         self.iconbitmap(f'{self.relative_to_assets('favicon.ico')}')
+        self.controlador = AdvogadoController()
 
         # Altera lista aqui ou talvez fazer no método que lida com o enter
-        self.advogados = []
-        for i in range(1, 4):
-            advogado = {
-                'nome': f'Advogado {i}',
-                'clientes': [f'Cliente {j}' for j in range(1, 3)],
-            }
-            self.advogados.append(advogado)
+        self.advogados = self.controlador.listar_advogados()
 
         self.create_widgets()
 
@@ -193,7 +189,7 @@ class SearchApp(tk.Tk):
         # Encontra os clientes associados ao advogado clicado
         for a in self.advogados:
             if a['nome'] == advogado:
-                clientes = a['clientes']
+                clientes = a['processos']
                 break
 
         # Exibe os clientes em uma nova janela
@@ -201,15 +197,16 @@ class SearchApp(tk.Tk):
 
     def show_clients_window(self, advogado, clientes):
         clients_window = tk.Toplevel(self)
-        clients_window.title(f'Clientes do advogado {advogado}')
+        clients_window.title(f'Processos do advogado {advogado}')
         clients_window.iconbitmap(f'{self.relative_to_assets('favicon.ico')}')
         from .app import App
-        App.centralize_app(clients_window, 400, 300)
+
+        App.centralize_app(clients_window, 680, 300)
         clients_window.configure(bg='#81A69F')
 
         advogado_label = tk.Label(
             clients_window,
-            text=f'Nome do Advogado: {advogado}',
+            text=f'Processos do Advogado {advogado}',
             bg='#81A69F',
             fg='white',
             font=('Arial', 12, 'bold'),
@@ -230,29 +227,33 @@ class SearchApp(tk.Tk):
             yscrollcommand=scrollbar.set,
         )
         for cliente in clientes:
-            client_listbox.insert(tk.END, cliente)
+            client_listbox.insert(
+                tk.END,
+                (f'Número: {cliente['numero']} | Comarca: {cliente['comarca']} '
+                f'| Vara: {cliente['vara']} | Distribuição: {cliente['distribuicao']}')
+            )
         client_listbox.pack(side='left', fill='both', expand=True)
 
         scrollbar.config(command=client_listbox.yview)
 
         # Adiciona o evento de clique para cada cliente
-        client_listbox.bind(
-            '<Double-Button-1>',
-            lambda event, adv=advogado, cli=client_listbox: self.handle_client_click(
-                adv, cli
-            ),
-        )
+        if clientes:
+            client_listbox.bind(
+                '<Double-Button-1>',
+                lambda event, adv=advogado, cli=client_listbox: self.handle_client_click(
+                    adv, cli
+                ),
+            )
 
     def handle_client_click(self, advogado, cliente):
         # Aqui você pode adicionar a lógica para exibir detalhes específicos do cliente
-        selected_index = cliente.curselection()[0]
-        selected_cliente = cliente.get(selected_index)
-        messagebox.showinfo(
-            'Detalhes do cliente',
-            f'Detalhes do cliente {selected_cliente} do advogado {advogado}',
-        )
-    
-    
+        # selected_index = cliente.curselection()[0]
+        # selected_cliente = cliente.get(selected_index)
+        # messagebox.showinfo(
+        #     'Detalhes do cliente',
+        #     f'Detalhes do cliente {selected_cliente} do advogado {advogado}',
+        # )
+        pass
 
     def button_1_clicked(self):
         self.destroy()

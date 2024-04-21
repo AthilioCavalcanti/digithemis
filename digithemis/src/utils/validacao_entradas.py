@@ -10,7 +10,7 @@ from errors import (
     CPFInvalidoError,
     NumeroProcessoInvalidoError,
     OABInvalidaError,
-    TelefoInvalidoError,
+    TelefoneInvalidoError,
 )
 
 
@@ -203,4 +203,4 @@ class ValidacaoEntradas:
         if re.match(regex_telefone, telefone):
             return True
         else:
-            raise TelefoInvalidoError()
+            raise TelefoneInvalidoError()
