@@ -27,13 +27,23 @@ def procurar_string(texto, string_procurada):
     else:
         return False
 
-def buscar_palavra_em_arquivos(diretorio, palavra_procurada):
+def buscar_palavra_em_pdf_imagens(diretorio, palavra_procurada):
     arquivos_com_palavra = []
     for raiz, _, arquivos in os.walk(diretorio):
         for arquivo in arquivos:
             caminho_arquivo = os.path.join(raiz, arquivo)
-            imagem = ler_imagem(caminho_arquivo)
-            texto = converter_imagem_para_string(imagem)
-            if procurar_string(texto, palavra_procurada):
-                arquivos_com_palavra.append(caminho_arquivo)
+            
+            if arquivo.lower().endswith(('.jpg', '.jpeg', '.png')):
+                imagem = cv2.imread(caminho_arquivo)
+                texto = converter_imagem_para_string(imagem)
+                if procurar_string(texto, palavra_procurada):
+                    arquivos_com_palavra.append(caminho_arquivo)
+            
+            elif arquivo.lower().endswith('.pdf'):
+                imagens_pdf = converter_pdf_para_imagens(caminho_arquivo)
+                for img in imagens_pdf:
+                    imagem_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+                    texto = converter_imagem_para_string(imagem_rgb)
+                    if procurar_string(texto, palavra_procurada):
+                        arquivos_com_palavra.append(caminho_arquivo)
     return arquivos_com_palavra
