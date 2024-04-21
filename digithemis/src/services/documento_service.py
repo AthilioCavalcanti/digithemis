@@ -109,3 +109,11 @@ class DocumentoService:
             except Exception as erro:
                 con.session.rollback()
                 raise erro
+            
+    def buscar_documento_por_titulo(self, titulo):
+        with self.conexao as con:
+            try:
+                documento = con.session.query(Documento).filter(Documento.titulo == titulo).first()
+                return documento
+            except Exception as e:
+                return None

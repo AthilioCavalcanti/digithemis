@@ -4,6 +4,7 @@ from tkinter import Tk
 from .login import LoginApp
 from .menu_advogado import Menu_advogadoapp
 from .menu_admin import AdminApp
+from utils import GerenciamentoDiretorios
 
 
 class App:
@@ -12,6 +13,7 @@ class App:
             self.show_menu_page()
         else:
             self.show_login_page()
+        GerenciamentoDiretorios.criar_diretorio('digithemis')
 
     def show_login_page(self):
         LoginApp()

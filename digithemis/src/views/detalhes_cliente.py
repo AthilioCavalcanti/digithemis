@@ -188,7 +188,7 @@ class AplicativoPerfilCliente:
             for documento in documentos:
                 text.insert(
                     'end',
-                    f"Link {documento['titulo']}\n",
+                    f"{documento['titulo']} ---- Data: {documento['insercao']}\n",
                     f"link_{documento['titulo']}",
                 )
                 text.tag_bind(
@@ -219,20 +219,33 @@ class AplicativoPerfilCliente:
         ]
         for titulo, info in zip(titulos, infos):
             self.informacoes_texto.insert('end', titulo, 'bold')
-            self.informacoes_texto.insert('end', f' {info}\n\n')
+            self.informacoes_texto.insert('end', f' {info}\n')
         self.informacoes_texto.config(fg='black', state='disabled')
 
     def document_clicked(self, doc):
-        print(doc)
+        import webbrowser
+        import os
+        caminho_base = os.path.expanduser('~/digithemis')
+        diretorio_cliente = self.controlador_cliente._remover_acentos(self.cliente['nome']) 
+        caminho_cliente = os.path.join(caminho_base, diretorio_cliente)
+        caminho_arquivo = os.path.join(caminho_cliente, f'{doc['titulo']}{doc['categoria']}')
+
+        try:
+            webbrowser.open(caminho_arquivo)
+        except Exception as e:
+            print(f"Erro ao abrir o arquivo: {e}")
 
     def botao_3_clicado(self):
         print('Buscando documentos do cliente...')
         caminho_diretorio = filedialog.askdirectory()
         docs = OCR.buscar_palavra_em_pdf_imagens(caminho_diretorio, self.cliente['nome'].upper())
-        print(docs)
+        # print(docs)
         # se achar documentos e ter sucesso ao registrar, recarregar quadro de documentos
-        # if docs:
-        #     self.criar_quadro_docs()
+        self.controlador_cliente.salvar_documentos_cliente(
+            self.cliente['cpf_cnpj'], docs
+        )
+        if docs:
+            self.criar_quadro_docs()
 
 
 if __name__ == '__main__':
