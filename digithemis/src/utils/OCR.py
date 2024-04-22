@@ -63,6 +63,7 @@ def buscar_palavra_em_pdf_imagens(diretorio, palavra_procurada):
                         arquivos_com_palavra.append(
                             {'tipo': classificacao, 'caminho': caminho_arquivo}
                         )
+                        break
     return arquivos_com_palavra
 
 
