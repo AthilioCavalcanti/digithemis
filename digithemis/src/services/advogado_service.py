@@ -2,6 +2,7 @@ from config import ConexaoDB
 from errors import RegistroExistenteError, RegistroNaoExistenteError
 from models import Advogado, Especialidade, AdvogadoEspecialidade
 from utils import Seguranca
+from sqlalchemy.exc import IntegrityError
 
 
 class AdvogadoService:
@@ -114,7 +115,7 @@ class AdvogadoService:
             except Exception as erro:
                 con.session.rollback()
                 raise erro
-            
+
     def especialidade_do_advogado(self, cpf_advogado):
         with self.conexao as con:
             try:
@@ -130,7 +131,10 @@ class AdvogadoService:
                 especialidade = (
                     con.session.query(Especialidade)
                     .join(AdvogadoEspecialidade)
-                    .filter(AdvogadoEspecialidade.id_advogado == advogado.id_advogado)
+                    .filter(
+                        AdvogadoEspecialidade.id_advogado
+                        == advogado.id_advogado
+                    )
                     .first()
                 )
 
@@ -138,3 +142,22 @@ class AdvogadoService:
 
             except Exception as erro:
                 raise erro
+
+    # Método para viabilizar facilmente um usuário para teste
+    def verificar_e_adicionar_usuario_teste(self):
+        with self.conexao as con:
+            if con.session.query(Advogado).count() == 0:
+                advogado = Advogado(
+                    nome='Advogado Exemplo',
+                    cpf='12345678900',
+                    oab='SP123.456',
+                    senha=Seguranca.criptografa_senha('teste'),
+                    email='advogado@example.com',
+                    celular='11999897823',
+                    admin=True,
+                )
+                try:
+                    con.session.add(advogado)
+                    con.session.commit()
+                except IntegrityError:
+                    con.session.rollback()
