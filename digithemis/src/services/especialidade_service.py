@@ -54,3 +54,17 @@ class EspecialidadeService:
             except Exception as erro:
                 con.session.rollback()
                 raise erro
+    
+     # Método para viabilizar facilmente um usuário para teste
+    def verificar_e_adicionar_especialidades_teste(self):
+        with self.conexao as con:
+            if con.session.query(Especialidade).count() == 0:
+                tipos_especialidades = ['Civil', 'Penal', 'Previdenciário', 'Trabalhista']
+                especialidades = []
+                for especialidade in tipos_especialidades:
+                    especialidades.append(Especialidade(tipo=especialidade))
+                try:
+                    con.session.add_all(especialidades)
+                    con.session.commit()
+                except Exception:
+                    con.session.rollback()
