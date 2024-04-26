@@ -72,6 +72,7 @@ Utilizando tecnologias como OCR e GED, permite o cadastro e busca de clientes, i
 - [SQLAlchemy](https://www.sqlalchemy.org/)
 - [DOTENV](https://pypi.org/project/python-dotenv/)
 - [Bcrypt](https://pypi.org/project/bcrypt/)
+- [Tkinter](https://docs.python.org/3/library/tkinter.html#module-tkinter)
 
 ## 📥 Instalação
 
