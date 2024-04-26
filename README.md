@@ -6,6 +6,13 @@
 > É uma ferramenta de gestão para advogados, projetada para simplificar o processo de transição de um acervo físico de documentos para o digital, organização e acompanhamento de processos legais.\
 Utilizando tecnologias como OCR e GED, permite o cadastro e busca de clientes, inserção de processos e atribuição automática de documentos, agilizando o fluxo de trabalho jurídico.
 
+## Sumário
+- [Ajustes e Melhorias](#-ajustes-e-melhorias)
+- [Funcionalidades](#-funcionalidades)
+- [Boas Práticas](#-boas-práticas)
+- [Pré-requisitos](#-pré-requisitos)
+- [Instalação](#-instalação)
+- [Colaboradores](#-colaboradores)
 
 ## 🔧 Ajustes e Melhorias
 
@@ -16,6 +23,42 @@ Utilizando tecnologias como OCR e GED, permite o cadastro e busca de clientes, i
 - [x] Busca de Clientes
 - [ ] Cadastro automático
 - [ ] Recursos de Administração
+
+## ⚙️ Funcionalidades
+
+### Login e Registro de Usuário
+- **Login:** Permite que usuários registrados acessem suas contas fornecendo suas credenciais.
+- **Registro:** Novos usuários podem ser registrados através de usuários administradores fornecendo informações como nome, e-mail, senha, OAB, CPF, telefone.
+
+### Tela de Menu
+- **Menu Principal:** Após o login, os usuários são direcionados para a tela de menu, onde podem acessar todas as funcionalidades disponíveis.
+
+### Tela de Busca
+- **Busca de Clientes:** Permite aos usuários pesquisar clientes e seus processos ou documentos associados.
+
+### Tela de Cadastro de Usuário
+- **Cadastro de Novos Usuários:** A partir da tela de administração, os administradores podem cadastrar novos usuários no sistema.
+
+### Cadastro de Cliente
+- **Registro de Novos Clientes:** Os usuários podem adicionar novos clientes ao sistema, fornecendo informações como nome, CPF/CNPJ, endereço, etc.
+
+### Outras Funcionalidades
+- **Inserir Processo:** Capacidade de gerar relatórios personalizados sobre clientes, processos ou documentos.
+- **Editar Perfil do Usuário:** Visando a necessidade de algumas alterações estarem disponíveis para o usuário, deixamos à disposição a possibilidade de alterar nome, OAB, telefone, e-mail, senha.
+- **Perfil Advogado:** Uma página de perfil personalizada para cada advogado com suas informações e estatísticas relevantes.
+- **Esqueci a Senha:** Funcionalidade para recuperar a senha através do envio de um e-mail de redefinição de senha.
+
+## 👍 Boas Práticas
+
+> Para uma experiência suave e colaborativa ao utilizar o Digithemis, recomendamos seguir algumas boas práticas:
+
+- **Leia o README:** Antes de começar a utilizar o projeto, leia cuidadosamente o arquivo README. Ele contém informações importantes sobre a instalação, configuração, uso e contribuição.
+
+- **Siga as instruções:** Siga as instruções de instalação e configuração fornecidas no README para configurar o projeto corretamente em seu ambiente.
+
+- **Respeite as diretrizes:** Utilize o projeto de acordo com as diretrizes de uso e licença fornecidas. Respeite os direitos autorais e as políticas de uso.
+
+- **Forneça feedback:** Se encontrar problemas, bugs ou tiver sugestões de melhoria, sinta-se à vontade para fornecer feedback. Abra uma issue detalhando o problema ou a sugestão.
 
 ## 💻 Pré-requisitos
 - [Python 3.12](https://www.python.org/downloads/release/python-3120/)
@@ -29,6 +72,21 @@ Utilizando tecnologias como OCR e GED, permite o cadastro e busca de clientes, i
 - [SQLAlchemy](https://www.sqlalchemy.org/)
 - [DOTENV](https://pypi.org/project/python-dotenv/)
 - [Bcrypt](https://pypi.org/project/bcrypt/)
+
+## 📥 Instalação
+
+1. Clone o repositório:
+    ```sh
+    git clone https://github.com/seu-usuario/Digithemis.git
+    ```
+2. Navegue até o diretório do projeto:
+    ```sh
+    cd Digithemis
+    ```
+3. Instale as dependências utilizando o Poetry:
+    ```sh
+    poetry install
+    ```
 
 ## 🤝 Colaboradores
 
